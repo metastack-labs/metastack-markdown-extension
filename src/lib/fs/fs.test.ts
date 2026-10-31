@@ -3,6 +3,8 @@ import { describe, test } from 'node:test';
 import { documentKind, languageForName, normaliseNewFileName } from './file-types.ts';
 import { createIgnoreMatcher, isAlwaysIgnored } from './gitignore.ts';
 import {
+	assetPathCandidates,
+	assetUrlCandidates,
 	candidatePathsWithinRoot,
 	containingDirectoryUrl,
 	fileUrlCrumbs,
@@ -90,5 +92,27 @@ describe('file types', () => {
 		assert.deepEqual(normaliseNewFileName('notes.txt'), { name: 'notes.txt' });
 		assert.ok('error' in normaliseNewFileName('a/b'));
 		assert.ok('error' in normaliseNewFileName('   '));
+	});
+});
+
+describe('asset candidates', () => {
+	test('relative references have one candidate', () => {
+		assert.deepEqual(assetPathCandidates('guides', './a.png'), ['guides/a.png']);
+		assert.deepEqual(assetPathCandidates('guides', '../../a.png'), []);
+		assert.deepEqual(assetUrlCandidates('file:///site/guides/x.mdx', 'a.png'), ['file:///site/guides/a.png']);
+	});
+
+	test('root-relative references try each enclosing folder, nearest first', () => {
+		assert.deepEqual(assetPathCandidates('content/guides', '/media/v1.png'), [
+			'content/guides/media/v1.png',
+			'content/media/v1.png',
+			'media/v1.png',
+		]);
+		assert.deepEqual(assetUrlCandidates('file:///repo/content/guides/x.mdx', '/media/v1.png'), [
+			'file:///repo/content/guides/media/v1.png',
+			'file:///repo/content/media/v1.png',
+			'file:///repo/media/v1.png',
+			'file:///media/v1.png',
+		]);
 	});
 });

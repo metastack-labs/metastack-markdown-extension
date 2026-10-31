@@ -21,6 +21,8 @@ import {
 	rootFromHandle,
 } from '../lib/fs/nodes.ts';
 import {
+	assetPathCandidates,
+	assetUrlCandidates,
 	basename,
 	candidatePathsWithinRoot,
 	containingDirectoryUrl,
@@ -814,14 +816,19 @@ export function useWorkspace() {
 			if (!target) return null;
 			try {
 				if (target.origin.type === 'file-url') {
-					return await readFileUrlBlob(new URL(reference, target.origin.url).href);
+					for (const url of assetUrlCandidates(target.origin.url, reference)) {
+						const blob = await readFileUrlBlob(url);
+						if (blob) return blob;
+					}
+					return null;
 				}
 				const folder = folderOf(target);
 				if (!folder || !target.node) return null;
-				const resolved = resolveReference(dirname(target.node.path), reference);
-				if (!resolved) return null;
-				const file = await findFile(folder.node, resolved.path);
-				return file ? await getFile(file) : null;
+				for (const path of assetPathCandidates(dirname(target.node.path), reference)) {
+					const file = await findFile(folder.node, path);
+					if (file) return await getFile(file);
+				}
+				return null;
 			} catch {
 				return null;
 			}

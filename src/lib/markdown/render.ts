@@ -1,9 +1,25 @@
-import { Marked, type TokenizerAndRendererExtension, type Tokens } from 'marked';
+import { Marked, type Token, type TokenizerAndRendererExtension, type Tokens } from 'marked';
 import markedFootnote from 'marked-footnote';
+import {
+	type ChildrenKind,
+	componentDefinition,
+	type RenderContext,
+	type RenderedChildren,
+	renderComponent,
+} from './components.ts';
 import { type FrontMatter, splitFrontMatter } from './front-matter.ts';
 import { highlightCode } from './highlight.ts';
 import { escapeHtml, htmlToText, isExternalUrl, isRelativeReference } from './html.ts';
+import { dedent, type JsxElement, readJsxElement, readMdxComment } from './jsx.ts';
 import { Slugger } from './slug.ts';
+
+export interface RenderOptions {
+	/**
+	 * Read the source as MDX: hide `{/* comments *\/}` and `import`/`export` lines, and treat every
+	 * capitalised tag as a component. Components render in plain Markdown too.
+	 */
+	readonly mdx?: boolean;
+}
 
 export interface TocEntry {
 	readonly id: string;
@@ -102,12 +118,162 @@ function mathExtensions(onMath: () => void): TokenizerAndRendererExtension[] {
 	];
 }
 
+interface JsxToken extends Tokens.Generic {
+	readonly element: JsxElement;
+	readonly childKind: ChildrenKind;
+	readonly tokens: Token[];
+}
+
+/** Plain Markdown keeps ALL-CAPS tags (`<B>`, `<DIV>`) as HTML; MDX reads every capitalised tag as a component. */
+function claimsTag(name: string, mdx: boolean): boolean {
+	return mdx || componentDefinition(name) !== undefined || name !== name.toUpperCase();
+}
+
+const LINE_END = /[ \t]*(?:\n+|$)/y;
+
+/** A component element on its own line(s), starting at `from`: its element and full raw length. */
+function flowElementAt(src: string, from: number, mdx: boolean): { element: JsxElement; length: number } | null {
+	const indent = / {0,3}(?=<[A-Z])/y;
+	indent.lastIndex = from;
+	const lead = indent.exec(src);
+	if (!lead) return null;
+	const start = from + lead[0].length;
+	const element = readJsxElement(src, start);
+	if (!element || !claimsTag(element.name, mdx)) return null;
+	LINE_END.lastIndex = start + element.length;
+	const trailing = LINE_END.exec(src);
+	if (!trailing) return null;
+	return { element, length: start + element.length + trailing[0].length - from };
+}
+
+function renderedChildren(
+	parser: { parse: (tokens: Token[]) => string; parseInline: (tokens: Token[]) => string },
+	token: JsxToken
+): RenderedChildren {
+	if (token.element.children === null) return { html: '', items: null };
+	if (token.childKind === 'inline') return { html: parser.parseInline(token.tokens), items: null };
+	const list = token.tokens.find((child): child is Tokens.List => child.type === 'list');
+	return {
+		html: parser.parse(token.tokens),
+		items: list ? list.items.map((item) => parser.parse(item.tokens)) : null,
+	};
+}
+
+/** MDX components (`<PromptBlock text={`…`} />`), plus MDX comments and ESM lines in `.mdx` files. */
+function mdxExtensions(mdx: boolean, context: RenderContext): TokenizerAndRendererExtension[] {
+	const blockComponent: TokenizerAndRendererExtension = {
+		name: 'jsxBlock',
+		level: 'block',
+		// Called with the source minus its first character; return the newline before a component line.
+		start(src) {
+			const lines = /\n(?= {0,3}<[A-Z])/g;
+			for (let match = lines.exec(src); match; match = lines.exec(src)) {
+				if (flowElementAt(src, match.index + 1, mdx)) return match.index;
+			}
+			return undefined;
+		},
+		tokenizer(src) {
+			const found = flowElementAt(src, 0, mdx);
+			if (!found) return undefined;
+			const { element } = found;
+			const childKind = componentDefinition(element.name)?.children ?? 'block';
+			const token: JsxToken = { type: 'jsxBlock', raw: src.slice(0, found.length), element, childKind, tokens: [] };
+			if (element.children !== null) {
+				if (childKind === 'inline') this.lexer.inline(element.children.trim(), token.tokens);
+				else this.lexer.blockTokens(dedent(element.children), token.tokens);
+			}
+			return token;
+		},
+		renderer(token) {
+			const jsx = token as JsxToken;
+			return renderComponent(jsx.element.name, jsx.element.props, renderedChildren(this.parser, jsx), context, false);
+		},
+	};
+
+	const inlineComponent: TokenizerAndRendererExtension = {
+		name: 'jsxInline',
+		level: 'inline',
+		start(src) {
+			return /<[A-Z]/.exec(src)?.index;
+		},
+		tokenizer(src) {
+			if (!/^<[A-Z]/.test(src)) return undefined;
+			const element = readJsxElement(src, 0);
+			if (!element || !claimsTag(element.name, mdx)) return undefined;
+			const token: JsxToken = {
+				type: 'jsxInline',
+				raw: src.slice(0, element.length),
+				element,
+				childKind: 'inline',
+				tokens: [],
+			};
+			if (element.children !== null) this.lexer.inlineTokens(element.children, token.tokens);
+			return token;
+		},
+		renderer(token) {
+			const jsx = token as JsxToken;
+			return renderComponent(jsx.element.name, jsx.element.props, renderedChildren(this.parser, jsx), context, true);
+		},
+	};
+
+	if (!mdx) return [blockComponent, inlineComponent];
+
+	return [
+		blockComponent,
+		inlineComponent,
+		{
+			// `{/* … */}` on its own line: MDX's comment, never shown.
+			name: 'mdxCommentBlock',
+			level: 'block',
+			start(src) {
+				return /\n {0,3}\{\s*\/\*/.exec(src)?.index;
+			},
+			tokenizer(src) {
+				const indent = /^ {0,3}/.exec(src)?.[0].length ?? 0;
+				const length = readMdxComment(src, indent);
+				if (!length) return undefined;
+				LINE_END.lastIndex = indent + length;
+				const trailing = LINE_END.exec(src);
+				if (!trailing) return undefined;
+				return { type: 'mdxCommentBlock', raw: src.slice(0, indent + length + trailing[0].length) };
+			},
+			renderer: () => '',
+		},
+		{
+			name: 'mdxCommentInline',
+			level: 'inline',
+			start(src) {
+				return /\{\s*\/\*/.exec(src)?.index;
+			},
+			tokenizer(src) {
+				const length = readMdxComment(src, 0);
+				return length ? { type: 'mdxCommentInline', raw: src.slice(0, length) } : undefined;
+			},
+			renderer: () => '',
+		},
+		{
+			// Top-level `import` / `export` statements run in MDX's compiler, not on the page.
+			name: 'mdxEsm',
+			level: 'block',
+			tokenizer(src) {
+				if (!this.lexer.state.top) return undefined;
+				const statement =
+					/^(?:import\s+(?:['"]|[\w*{][\s\S]*?\bfrom\s*['"])|export\s+(?:const|let|var|function|class|async|default|\{|\*))[^\n]*(?:\n(?![ \t]*(?:\n|$))[^\n]*)*(?:\n+|$)/.exec(
+						src
+					);
+				return statement ? { type: 'mdxEsm', raw: statement[0] } : undefined;
+			},
+			renderer: () => '',
+		},
+	];
+}
+
 /**
  * Markdown → HTML. Pure and synchronous so it runs in tests and in a render pass.
  * Math and Mermaid become placeholders that the browser hydrates lazily; relative images
  * become `data-local-src` so the viewer can resolve them against the open folder.
  */
-export function renderMarkdown(source: string): RenderedMarkdown {
+export function renderMarkdown(source: string, options: RenderOptions = {}): RenderedMarkdown {
 	const { frontMatter, body } = splitFrontMatter(source);
 	const slugger = new Slugger();
 	const toc: TocEntry[] = [];
@@ -115,12 +281,23 @@ export function renderMarkdown(source: string): RenderedMarkdown {
 	let hasMath = false;
 	let hasMermaid = false;
 
+	let componentIds = 0;
+	const context: RenderContext = {
+		id: (prefix) => {
+			componentIds += 1;
+			return `mdx-${prefix}-${componentIds}`;
+		},
+	};
+
 	const marked = new Marked({ gfm: true, breaks: false });
 	marked.use(markedFootnote());
 	marked.use({
-		extensions: mathExtensions(() => {
-			hasMath = true;
-		}),
+		extensions: [
+			...mathExtensions(() => {
+				hasMath = true;
+			}),
+			...mdxExtensions(options.mdx === true, context),
+		],
 		renderer: {
 			heading({ tokens, depth }) {
 				const inner = this.parser.parseInline(tokens);

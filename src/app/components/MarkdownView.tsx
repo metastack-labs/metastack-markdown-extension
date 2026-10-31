@@ -1,5 +1,6 @@
 import { type MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { safeDecode } from '../../lib/fs/paths.ts';
+import { PROMPT_STATUS } from '../../lib/markdown/components.ts';
 import { renderMath, renderMermaid } from '../../lib/markdown/enhance.ts';
 import { isRelativeReference } from '../../lib/markdown/html.ts';
 import { Dialog } from './primitives.tsx';
@@ -24,6 +25,42 @@ interface MarkdownViewProps {
 
 function prefersReducedMotion(): boolean {
 	return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/** PromptBlock's copy button, with production's status messages and a select-it-yourself fallback. */
+async function copyPrompt(button: HTMLButtonElement): Promise<void> {
+	const block = button.closest('.mdx-prompt');
+	const code = block?.querySelector('pre code');
+	const status = block?.querySelector('.mdx-prompt-status');
+	if (!code || !status) return;
+	button.disabled = true;
+	button.setAttribute('aria-busy', 'true');
+	try {
+		await navigator.clipboard.writeText(code.textContent ?? '');
+		button.dataset.state = 'copied';
+		status.textContent = PROMPT_STATUS.copied;
+	} catch {
+		const range = document.createRange();
+		range.selectNodeContents(code);
+		window.getSelection()?.removeAllRanges();
+		window.getSelection()?.addRange(range);
+		button.dataset.state = 'failed';
+		status.textContent = PROMPT_STATUS.failed;
+	} finally {
+		button.disabled = false;
+		button.removeAttribute('aria-busy');
+	}
+}
+
+/** Checklist ticks are for the reader's session only; they never change the document. */
+function updateChecklist(box: HTMLInputElement): void {
+	box.closest('li')?.toggleAttribute('data-checked', box.checked);
+	const list = box.closest('.mdx-checklist');
+	const progress = list?.querySelector('.mdx-checklist-progress');
+	if (!list || !progress) return;
+	const boxes = list.querySelectorAll<HTMLInputElement>('input[data-action="checklist-item"]');
+	const checked = [...boxes].filter((item) => item.checked).length;
+	progress.textContent = `${checked} of ${boxes.length} checked`;
 }
 
 export function scrollToHeading(root: ParentNode, id: string): boolean {
@@ -143,6 +180,18 @@ export function MarkdownView({
 						delete copyButton.dataset.copied;
 					}, 1500);
 				});
+				return;
+			}
+
+			const promptButton = target.closest<HTMLButtonElement>('[data-action="copy-prompt"]');
+			if (promptButton) {
+				void copyPrompt(promptButton);
+				return;
+			}
+
+			const checklistBox = target.closest<HTMLInputElement>('input[data-action="checklist-item"]');
+			if (checklistBox) {
+				updateChecklist(checklistBox);
 				return;
 			}
 
