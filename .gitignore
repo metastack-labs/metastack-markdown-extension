@@ -1,0 +1,18 @@
+# dependencies
+node_modules
+
+# wxt
+.output
+.wxt
+web-ext.config.ts
+stats.html
+stats-*.json
+
+# misc
+.DS_Store
+*.pem
+*.log
+
+# env
+.env
+.env*.local

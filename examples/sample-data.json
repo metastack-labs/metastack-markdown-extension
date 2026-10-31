@@ -1,0 +1,63 @@
+{
+	"extension": {
+		"name": "MetaExplore Markdown Viewer",
+		"version": "0.1.0",
+		"description": "View and edit local Markdown, JSON, and CSV files"
+	},
+	"features": [
+		{
+			"name": "Syntax Highlighting",
+			"status": "complete",
+			"languages": 20,
+			"bundled": true
+		},
+		{
+			"name": "Mermaid Diagrams",
+			"status": "complete",
+			"loading": "CDN",
+			"bundled": false
+		},
+		{
+			"name": "KaTeX Math",
+			"status": "complete",
+			"loading": "CDN",
+			"bundled": false
+		}
+	],
+	"settings": {
+		"theme": "dark",
+		"showTitles": true,
+		"jsonExplorer": false,
+		"leftOpen": true,
+		"rightOpen": true,
+		"fontSize": 15,
+		"lineHeight": 1.6
+	},
+	"stats": {
+		"totalSize": "831 KB",
+		"contentScriptJs": "175 KB",
+		"contentScriptCss": "17 KB",
+		"languages": [
+			"javascript",
+			"typescript",
+			"python",
+			"rust",
+			"go",
+			"bash",
+			"json",
+			"yaml",
+			"css",
+			"html",
+			"sql",
+			"java",
+			"cpp",
+			"ruby",
+			"php",
+			"swift",
+			"kotlin",
+			"markdown",
+			"xml",
+			"diff"
+		]
+	}
+}

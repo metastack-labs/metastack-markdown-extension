@@ -1,0 +1,18 @@
+{
+	"extensionName": {
+		"message": "MetaStack Markdown",
+		"description": "Extension name shown in the browser and the stores."
+	},
+	"extensionDescription": {
+		"message": "Drop local Markdown files or folders into your browser to read, edit and organise them.",
+		"description": "Extension description shown in the browser and the stores (max 132 characters)."
+	},
+	"actionTitle": {
+		"message": "Open Markdown workspace",
+		"description": "Tooltip for the toolbar button."
+	},
+	"commandOpenWorkspace": {
+		"message": "Open the Markdown workspace",
+		"description": "Keyboard shortcut description."
+	}
+}
