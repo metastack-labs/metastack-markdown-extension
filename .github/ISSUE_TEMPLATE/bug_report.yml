@@ -1,0 +1,45 @@
+name: Bug report
+description: Something doesn't work as it should
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: If a particular file triggers it, attach it or paste the smallest part that does.
+      placeholder: |
+        1. Open …
+        2. Click …
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options: [Chrome, Edge, Firefox, Other Chromium browser]
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Browser and extension versions
+      description: The extension version is on chrome://extensions or about:addons.
+      placeholder: Chrome 141, MetaStack Markdown 0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: opened-via
+    attributes:
+      label: How was the file opened?
+      options:
+        - Dropped onto the workspace
+        - Folder or file picker
+        - Opened by the browser (file:// address)
+        - Not about a specific file

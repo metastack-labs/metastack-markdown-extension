@@ -1,0 +1,7 @@
+<svg role="img" aria-label="MetaStack icon" width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><title>MetaStack icon</title>
+    <defs/>
+    <g>
+        <path fill="#242824" stroke="none" d="M 16 8 L 48 8 Q 56 8 56 16 L 56 28 L 44 28 L 44 24 Q 44 20 40 20 L 24 20 Q 20 20 20 24 L 20 28 L 8 28 L 8 16 Q 8 8 16 8 Z"/>
+        <path fill="#242824" stroke="none" d="M 16 56 L 48 56 Q 56 56 56 48 L 56 36 L 44 36 L 44 40 Q 44 44 40 44 L 24 44 Q 20 44 20 40 L 20 36 L 8 36 L 8 48 Q 8 56 16 56 Z"/>
+    </g>
+</svg>

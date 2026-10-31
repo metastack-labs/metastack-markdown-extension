@@ -13,6 +13,5 @@ stats-*.json
 *.pem
 *.log
 
-# env
-.env
-.env*.local
+# env and store credentials (`wxt submit init` writes .env.submit)
+.env*

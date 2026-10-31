@@ -1,0 +1,145 @@
+{
+	"brand": "metastack",
+	"ledger": "metastack-brand@2026-10-29",
+	"root": "assets/brand",
+	"assets": [
+		{
+			"id": "icon-16",
+			"surface": "extension-icon",
+			"size": "16x16",
+			"purpose": "Toolbar button and tab icon",
+			"versions": [
+				{
+					"version": 1,
+					"file": "../../public/icons/16.png",
+					"template": "scripts/brand-assets.ts",
+					"status": "needs-review",
+					"ledger": "metastack-brand@2026-10-29",
+					"source": "template",
+					"generated": false,
+					"label": "none",
+					"copy": null,
+					"review": null,
+					"decidedBy": null,
+					"decidedAt": null,
+					"notes": "MetaStack mark (metastack-app@4e57401 icon.svg) in white on a #242824 tile; mark paths reused, not redrawn"
+				}
+			]
+		},
+		{
+			"id": "icon-32",
+			"surface": "extension-icon",
+			"size": "32x32",
+			"purpose": "Toolbar button on high-density screens",
+			"versions": [
+				{
+					"version": 1,
+					"file": "../../public/icons/32.png",
+					"template": "scripts/brand-assets.ts",
+					"status": "needs-review",
+					"ledger": "metastack-brand@2026-10-29",
+					"source": "template",
+					"generated": false,
+					"label": "none",
+					"copy": null,
+					"review": null,
+					"decidedBy": null,
+					"decidedAt": null,
+					"notes": "MetaStack mark (metastack-app@4e57401 icon.svg) in white on a #242824 tile; mark paths reused, not redrawn"
+				}
+			]
+		},
+		{
+			"id": "icon-48",
+			"surface": "extension-icon",
+			"size": "48x48",
+			"purpose": "Browser extensions page",
+			"versions": [
+				{
+					"version": 1,
+					"file": "../../public/icons/48.png",
+					"template": "scripts/brand-assets.ts",
+					"status": "needs-review",
+					"ledger": "metastack-brand@2026-10-29",
+					"source": "template",
+					"generated": false,
+					"label": "none",
+					"copy": null,
+					"review": null,
+					"decidedBy": null,
+					"decidedAt": null,
+					"notes": "MetaStack mark (metastack-app@4e57401 icon.svg) in white on a #242824 tile; mark paths reused, not redrawn"
+				}
+			]
+		},
+		{
+			"id": "icon-128",
+			"surface": "extension-icon",
+			"size": "128x128",
+			"purpose": "Install prompt and store icon (96px artwork, 16px transparent padding)",
+			"versions": [
+				{
+					"version": 1,
+					"file": "../../public/icons/128.png",
+					"template": "scripts/brand-assets.ts",
+					"status": "needs-review",
+					"ledger": "metastack-brand@2026-10-29",
+					"source": "template",
+					"generated": false,
+					"label": "none",
+					"copy": null,
+					"review": null,
+					"decidedBy": null,
+					"decidedAt": null,
+					"notes": "MetaStack mark (metastack-app@4e57401 icon.svg) in white on a #242824 tile; mark paths reused, not redrawn"
+				}
+			]
+		},
+		{
+			"id": "cws-promo-small",
+			"surface": "chrome-web-store",
+			"size": "440x280",
+			"purpose": "Small promo tile; no text, legible at half size",
+			"versions": [
+				{
+					"version": 1,
+					"file": "store/promo-small.v1.png",
+					"template": "scripts/brand-assets.ts",
+					"status": "needs-review",
+					"ledger": "metastack-brand@2026-10-29",
+					"source": "template",
+					"generated": false,
+					"label": "none",
+					"copy": null,
+					"review": null,
+					"decidedBy": null,
+					"decidedAt": null,
+					"notes": "MetaStack mark (metastack-app@4e57401 icon.svg) in white on a #242824 tile; mark paths reused, not redrawn"
+				}
+			]
+		},
+		{
+			"id": "cws-marquee",
+			"surface": "chrome-web-store",
+			"size": "1400x560",
+			"purpose": "Marquee promo tile (optional)",
+			"versions": [
+				{
+					"version": 1,
+					"file": "store/marquee.v1.png",
+					"template": "scripts/brand-assets.ts",
+					"status": "needs-review",
+					"ledger": "metastack-brand@2026-10-29",
+					"source": "template",
+					"generated": false,
+					"label": "none",
+					"copy": null,
+					"review": null,
+					"decidedBy": null,
+					"decidedAt": null,
+					"notes": "MetaStack mark (metastack-app@4e57401 icon.svg) in white on a #242824 tile; mark paths reused, not redrawn"
+				}
+			]
+		}
+	]
+}

@@ -1,6 +1,16 @@
 {
 	"name": "metastack-markdown-extension",
 	"description": "View, edit and manage local Markdown files in Chrome and Firefox",
+	"license": "MIT",
+	"author": "MetaStack Labs",
+	"homepage": "https://github.com/metastack-labs/metastack-markdown-extension#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/metastack-labs/metastack-markdown-extension.git"
+	},
+	"bugs": {
+		"url": "https://github.com/metastack-labs/metastack-markdown-extension/issues"
+	},
 	"private": true,
 	"version": "0.1.0",
 	"type": "module",
@@ -22,7 +32,10 @@
 		"lint": "biome check .",
 		"format": "biome check --write .",
 		"test": "node --test \"src/**/*.test.ts\"",
-		"check": "bun run typecheck && bun run lint && bun run test && bun run build",
+		"verify": "node scripts/verify-build.ts",
+		"verify:sources": "node scripts/verify-sources.ts",
+		"brand": "node scripts/brand-assets.ts",
+		"check": "bun run typecheck && bun run lint && bun run test && bun run build && bun run verify",
 		"postinstall": "wxt prepare"
 	},
 	"dependencies": {
@@ -52,8 +65,8 @@
 		"@types/node": "^24.0.0",
 		"@types/react": "^19.2.0",
 		"@types/react-dom": "^19.2.0",
-		"@wxt-dev/auto-icons": "^1.1.0",
 		"@wxt-dev/module-react": "^1.2.0",
+		"sharp": "^0.35.5",
 		"tailwindcss": "^4.1.0",
 		"typescript": "~6.0.3",
 		"vite": "^8.0.0",

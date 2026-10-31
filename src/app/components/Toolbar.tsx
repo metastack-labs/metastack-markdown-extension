@@ -117,7 +117,10 @@ export function Toolbar({
 						onNavigate={(url) => void workspace.navigateFileUrl(url)}
 					/>
 				) : (
-					<span className="truncate text-[13px] font-medium text-fg-muted">MetaStack Markdown</span>
+					<span className="flex min-w-0 items-center gap-2 text-[13px] font-medium text-fg-muted">
+						<span className="brand-mark size-4" aria-hidden="true" />
+						<span className="truncate">MetaStack Markdown</span>
+					</span>
 				)}
 				{stats ? (
 					<span className="ml-2 hidden shrink-0 text-[12px] text-fg-subtle tabular-nums lg:inline">

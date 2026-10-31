@@ -15,7 +15,7 @@ export function Welcome({ workspace }: { readonly workspace: Workspace }) {
 	return (
 		<div className="animate-fade flex min-h-full items-center justify-center px-4 py-12">
 			<div className="flex w-full max-w-[520px] flex-col">
-				<img src="/icons/128.png" alt="" className="mb-6 size-12 rounded-[14px]" />
+				<span className="brand-mark mb-6 size-10 text-fg" aria-hidden="true" />
 				<h1 className="text-[26px] leading-tight font-semibold tracking-[-0.025em] text-balance">
 					Read and edit your Markdown, right in the browser
 				</h1>
