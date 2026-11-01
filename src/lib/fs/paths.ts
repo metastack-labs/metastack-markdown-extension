@@ -88,6 +88,39 @@ export function parentDirectoryUrl(url: string): string | null {
 	return parsed.href;
 }
 
+/** How many enclosing folders a root-relative reference (`/media/a.png`) is tried against. */
+const ROOT_RELATIVE_DEPTH = 8;
+
+/**
+ * Paths a reference from `fromDir` may point to, most likely first. Relative references have one.
+ * Root-relative ones (`/media/a.png`, the static-site convention MDX content uses) depend on a site
+ * root the viewer can't know, so they are tried against the document's folder and each folder above it.
+ */
+export function assetPathCandidates(fromDir: string, reference: string): string[] {
+	const resolved = resolveReference(fromDir, reference);
+	if (!resolved) return [];
+	if (!reference.trim().startsWith('/')) return [resolved.path];
+	const folders = splitPath(fromDir);
+	const candidates: string[] = [];
+	for (let depth = folders.length; depth >= 0 && candidates.length <= ROOT_RELATIVE_DEPTH; depth -= 1) {
+		candidates.push(joinPath(...folders.slice(0, depth), resolved.path));
+	}
+	return candidates;
+}
+
+/** The same for a document opened from a `file://` URL: absolute file URLs, most likely first. */
+export function assetUrlCandidates(documentUrl: string, reference: string): string[] {
+	const trimmed = reference.trim();
+	if (!trimmed.startsWith('/') || trimmed.startsWith('//')) return [new URL(trimmed, documentUrl).href];
+	const candidates: string[] = [];
+	let folder: string | null = containingDirectoryUrl(documentUrl);
+	while (folder && candidates.length <= ROOT_RELATIVE_DEPTH) {
+		candidates.push(new URL(`.${trimmed}`, folder).href);
+		folder = parentDirectoryUrl(folder);
+	}
+	return candidates;
+}
+
 /** URL of the directory a file URL lives in (or the URL itself if it is a directory). */
 export function containingDirectoryUrl(url: string): string {
 	const parsed = new URL(url);

@@ -1,0 +1,83 @@
+---
+title: MDX components
+---
+
+import { Something } from './not-shown.js'
+
+# MDX components
+
+Every component MetaStack Markdown renders, written the way MetaStack content writes them. Open this file in Split view and edit a prop to see it update as you type.
+
+{/* MDX comments like this one never show. */}
+
+## PromptBlock
+
+When it's done, the new bot shows up in your sidebar. Open it and check that the brief landed:
+
+<PromptBlock
+  title="check the brief landed"
+  text={`in three lines: what's your job, what do you never do, and when do you stop for me?`}
+/>
+
+Without a title, it uses the default:
+
+<PromptBlock text={"Summarise [the document] in five bullets for [your audience]."} />
+
+## Callout
+
+<Callout variant="rule">
+  One job per bot. If you're tempted to add a second, make a second bot.
+</Callout>
+
+<Callout variant="note">
+  **Brief:** the short file that tells a bot what it does, what it never does, and when to stop.
+</Callout>
+
+## Steps
+
+<Steps>
+- Open the app and choose **New bot**.
+- Paste the brief from the prompt above.
+- Send the check-in prompt and compare the answer to your brief.
+</Steps>
+
+## Checklist
+
+<Checklist title="Before you trust it">
+- It names its one job
+- It lists what it never does
+- It says when it stops and asks
+</Checklist>
+
+## Kbd
+
+Press <Kbd>⌘ Space</Kbd>, type the app name, then press <Kbd>Return</Kbd>.
+
+## PullQuote
+
+<PullQuote cite="From the field guide">
+A brief you've checked two links on is a brief you can act on.
+</PullQuote>
+
+## GuideImage and ShotPlaceholder
+
+<GuideImage src="/assets/diagram.svg" alt="A simple diagram." caption="Root-relative paths resolve against the nearest folder that has them." />
+
+<ShotPlaceholder
+  shot="V1"
+  brief="The new bot's chat, light mode, with the check-in answer visible."
+  alt="A bot's chat answering in three lines."
+  caption="The check-in answer, matching the brief."
+/>
+
+## When something can't render
+
+Components this viewer doesn't know show as written:
+
+<Tabs default="first">
+  Content inside an unknown component still renders as **Markdown**.
+</Tabs>
+
+Props must be plain text. Code is never run:
+
+<PromptBlock title="uses code" text={prompts.first} />

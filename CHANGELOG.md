@@ -16,3 +16,6 @@ First public release.
 - Read, Edit and Split views with a CodeMirror source editor. Saving keeps the file exactly as written, including its line endings.
 - Chrome and Edge save in place, remember opened folders, and warn before overwriting a file that changed on disk. Firefox saves by downloading a copy.
 - New documents, task checkboxes you can tick in the preview, light and dark themes, and reading settings.
+- MDX components render the way they do in MetaStack: `PromptBlock` (with Copy prompt), `Callout`, `GuideImage`, `ShotPlaceholder`, `Steps`, `Checklist`, `Kbd` and `PullQuote`. Props are read as plain text and never run; unknown components and invalid props show as written, with the reason.
+- `.mdx` files hide `{/* comments */}` and `import`/`export` lines.
+- Root-relative images (`/media/…`) resolve against the nearest enclosing folder that has them.

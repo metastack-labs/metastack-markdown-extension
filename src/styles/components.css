@@ -1,0 +1,371 @@
+/* MDX components (src/lib/markdown/components.ts). Ported from MetaStack's production guide styles
+   (learning-lab guide-pages.css) and the content pipeline's lab components, mapped onto this app's
+   tokens so they follow the light and dark themes:
+   --text → --fg · --muted → --fg-muted · --surface-hover → --surface · --control-line → --line-strong
+   --focus → --accent · --member-font → the reading font. */
+
+.markdown-body :where(.mdx-prompt, .mdx-callout, .mdx-checklist) {
+	min-width: 0;
+	margin: 1.75em 0;
+	border: 1px solid var(--line);
+	border-radius: 14px;
+	background: var(--surface);
+}
+
+/* ── PromptBlock ── */
+.markdown-body .mdx-prompt {
+	padding: 1.25rem;
+}
+.markdown-body .mdx-prompt-heading {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem 1rem;
+	margin-bottom: 1rem;
+}
+.markdown-body .mdx-prompt-heading > p {
+	min-width: 0;
+	margin: 0;
+	font-size: 0.875rem;
+	font-weight: 650;
+}
+.markdown-body .mdx-prompt-copy {
+	display: inline-flex;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	min-height: 40px;
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--line-strong);
+	border-radius: 8px;
+	background: var(--surface-raised);
+	color: var(--fg);
+	font: inherit;
+	font-size: 0.75rem;
+	font-weight: 650;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.markdown-body .mdx-prompt-copy:disabled {
+	opacity: 0.6;
+	cursor: wait;
+}
+.markdown-body .mdx-prompt-copy:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+.markdown-body .mdx-prompt-copy .mdx-icon-check,
+.markdown-body .mdx-prompt-copy[data-state="copied"] .mdx-icon-copy {
+	display: none;
+}
+.markdown-body .mdx-prompt-copy[data-state="copied"] .mdx-icon-check {
+	display: block;
+}
+.markdown-body .mdx-prompt pre {
+	margin: 0;
+	padding: 0;
+	overflow: visible;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	font-family: inherit;
+	font-size: 0.9375rem;
+	line-height: 1.8;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+.markdown-body .mdx-prompt pre code {
+	font: inherit;
+}
+.markdown-body .mdx-prompt-status {
+	min-height: 2.5em;
+	margin: 1rem 0 0;
+	color: var(--fg-muted);
+	font-size: 0.75rem;
+	line-height: 1.6;
+}
+
+/* ── Callout ── */
+.markdown-body .mdx-callout {
+	padding: 1rem 1.15rem 1.15rem;
+}
+.markdown-body .mdx-callout[data-variant="rule"] {
+	border-left: 3px solid var(--warning);
+	background: var(--warning-soft);
+}
+.markdown-body .mdx-callout[data-variant="note"] {
+	border-left: 3px solid var(--line-strong);
+}
+.markdown-body .mdx-callout-label {
+	margin: 0 0 0.55rem;
+	font-size: 0.8125rem;
+	font-weight: 650;
+	line-height: 1.4;
+}
+.markdown-body .mdx-callout-body {
+	font-size: 0.9375rem;
+	line-height: 1.7;
+}
+.markdown-body .mdx-callout-body > :where(*) {
+	margin: 0;
+}
+.markdown-body .mdx-callout-body > :where(* + *) {
+	margin-top: 0.65rem;
+}
+
+/* ── GuideImage and ShotPlaceholder share a footprint, so swapping one for the other doesn't move the page ── */
+.markdown-body :where(.mdx-guide-image, .mdx-shot-placeholder) {
+	margin: 2rem 0;
+}
+.markdown-body .mdx-guide-image img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 1.8;
+	object-fit: cover;
+	border-radius: 14px;
+}
+.markdown-body :where(.mdx-guide-image, .mdx-shot-placeholder) figcaption {
+	margin-top: 0.75rem;
+	color: var(--fg-muted);
+	font-size: 0.8125rem;
+	line-height: 1.7;
+}
+.markdown-body .mdx-shot-placeholder-frame {
+	display: grid;
+	align-content: center;
+	justify-items: center;
+	gap: 0.5rem;
+	aspect-ratio: 1.8;
+	padding: 1.5rem;
+	border: 1px dashed var(--line-strong);
+	border-radius: 14px;
+	background: var(--surface);
+	text-align: center;
+}
+.markdown-body .mdx-shot-placeholder-frame > span {
+	display: block;
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+.markdown-body .mdx-shot-placeholder-label {
+	color: var(--fg-muted);
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	font-variant-numeric: tabular-nums;
+}
+.markdown-body .mdx-shot-placeholder-brief {
+	max-width: 52ch;
+	font-size: 0.9375rem;
+	line-height: 1.55;
+	text-wrap: pretty;
+}
+.markdown-body .mdx-shot-placeholder-alt {
+	max-width: 60ch;
+	color: var(--fg-muted);
+	font-size: 0.8125rem;
+	line-height: 1.5;
+	text-wrap: pretty;
+}
+
+/* ── Steps ── */
+.markdown-body .mdx-steps {
+	margin: 1.5rem 0;
+	padding: 0;
+	list-style: none;
+}
+.markdown-body .mdx-steps > li {
+	display: grid;
+	grid-template-columns: 2rem minmax(0, 1fr);
+	gap: 0.75rem;
+	margin: 0;
+	padding: 1rem 0;
+	border-top: 1px solid var(--line);
+}
+.markdown-body .mdx-steps > li:last-child {
+	border-bottom: 1px solid var(--line);
+}
+.markdown-body .mdx-steps-number {
+	padding-top: 0.2rem;
+	color: var(--fg-muted);
+	font-size: 0.8125rem;
+	font-variant-numeric: tabular-nums;
+	line-height: 1.6;
+}
+.markdown-body .mdx-steps-body {
+	min-width: 0;
+}
+.markdown-body .mdx-steps-body > :where(*) {
+	margin: 0;
+}
+.markdown-body .mdx-steps-body > :where(* + *) {
+	margin-top: 0.75rem;
+}
+
+/* ── Checklist ── */
+.markdown-body .mdx-checklist {
+	padding: 1rem 1.15rem 1.15rem;
+}
+.markdown-body .mdx-checklist-title {
+	margin: 0 0 0.5rem;
+	font-size: 0.8125rem;
+	font-weight: 650;
+	line-height: 1.4;
+}
+.markdown-body .mdx-checklist-items {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.markdown-body .mdx-checklist-items > li {
+	margin: 0;
+}
+.markdown-body .mdx-checklist-items label {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.75rem;
+	min-height: 44px;
+	padding: 0.6rem 0;
+	font-size: 0.9375rem;
+	line-height: 1.6;
+	cursor: pointer;
+}
+.markdown-body .mdx-checklist-items > li + li label {
+	border-top: 1px solid var(--line);
+}
+.markdown-body .mdx-checklist-items input {
+	flex: none;
+	width: 18px;
+	height: 18px;
+	margin: 0.2rem 0 0;
+	accent-color: var(--accent);
+}
+.markdown-body .mdx-checklist-items input:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 4px;
+}
+.markdown-body .mdx-checklist-items > li[data-checked] span {
+	color: var(--fg-muted);
+	text-decoration: line-through;
+}
+.markdown-body .mdx-checklist-items span > :where(p) {
+	margin: 0;
+}
+.markdown-body .mdx-checklist-progress {
+	margin: 0.5rem 0 0;
+	color: var(--fg-muted);
+	font-size: 0.75rem;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ── Kbd ── */
+.markdown-body .mdx-kbd {
+	display: inline-block;
+	min-width: 1.6em;
+	padding: 0 0.4em;
+	border: 1px solid var(--line);
+	border-bottom-width: 2px;
+	border-radius: 6px;
+	background: var(--surface-raised);
+	font-family: inherit;
+	font-size: 0.85em;
+	font-weight: 600;
+	line-height: 1.6;
+	text-align: center;
+	white-space: nowrap;
+}
+
+/* ── PullQuote ── */
+.markdown-body .mdx-pull-quote {
+	margin: 2.5rem 0;
+	padding: 1.5rem 0;
+	border-top: 1px solid var(--line);
+	border-bottom: 1px solid var(--line);
+}
+.markdown-body .mdx-pull-quote blockquote {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	color: var(--fg);
+	font-size: clamp(1.375rem, 2.6vw, 1.75rem);
+	font-weight: 600;
+	letter-spacing: -0.03em;
+	line-height: 1.35;
+	text-wrap: balance;
+}
+.markdown-body .mdx-pull-quote blockquote > :where(p) {
+	margin: 0;
+}
+.markdown-body .mdx-pull-quote figcaption {
+	margin-top: 0.75rem;
+	color: var(--fg-muted);
+	font-size: 0.875rem;
+}
+
+/* ── Components this viewer doesn't know, or can't render as written ── */
+.markdown-body .mdx-unknown {
+	min-width: 0;
+	margin: 1.5em 0;
+	padding: 0.85rem 1rem;
+	border: 1px dashed var(--line-strong);
+	border-radius: 10px;
+}
+.markdown-body .mdx-unknown-head {
+	margin: 0;
+	color: var(--fg-muted);
+	font-size: 0.8125rem;
+}
+.markdown-body .mdx-unknown-props {
+	display: grid;
+	gap: 0.25rem;
+	margin: 0.6rem 0 0;
+	font-size: 0.8125rem;
+}
+.markdown-body .mdx-unknown-props > div {
+	display: grid;
+	grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+	gap: 0.75rem;
+}
+.markdown-body .mdx-unknown-props dt {
+	overflow: hidden;
+	color: var(--fg-muted);
+	font-family: var(--font-mono);
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.markdown-body .mdx-unknown-props dd {
+	min-width: 0;
+	margin: 0;
+	overflow-wrap: anywhere;
+}
+.markdown-body .mdx-unknown-children {
+	margin-top: 0.75rem;
+}
+.markdown-body .mdx-unknown-children > :last-child {
+	margin-bottom: 0;
+}
+.markdown-body .mdx-unknown-inline {
+	border-bottom: 1px dashed var(--line-strong);
+}
+
+@media (hover: hover) {
+	.markdown-body .mdx-prompt-copy:not(:disabled):hover {
+		background: var(--surface-hover);
+	}
+}
+@media (prefers-reduced-motion: no-preference) {
+	.markdown-body .mdx-prompt-copy {
+		transition: transform 150ms ease-out;
+	}
+	.markdown-body .mdx-prompt-copy:not(:disabled):active {
+		transform: scale(0.97);
+	}
+}
+@media (forced-colors: active) {
+	.markdown-body .mdx-checklist-items input {
+		forced-color-adjust: auto;
+	}
+}
