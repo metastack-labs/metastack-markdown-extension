@@ -44,7 +44,11 @@ export function App() {
 	const deferred = useDeferredValue(live);
 	const source = deferred.id === live.id ? deferred.text : live.text;
 	const isMarkdown = doc?.kind === 'markdown';
-	const rendered = useMemo(() => (isMarkdown ? renderMarkdown(source) : null), [isMarkdown, source]);
+	const isMdx = doc?.name.toLowerCase().endsWith('.mdx') ?? false;
+	const rendered = useMemo(
+		() => (isMarkdown ? renderMarkdown(source, { mdx: isMdx }) : null),
+		[isMarkdown, isMdx, source]
+	);
 	const sanitizedHtml = useMemo(() => (rendered ? sanitizeHtml(rendered.html) : ''), [rendered]);
 	const taskCount = useMemo(() => (isMarkdown ? findTaskMarkers(source).length : 0), [isMarkdown, source]);
 	const stats = useMemo(() => (isMarkdown ? countWords(source) : null), [isMarkdown, source]);

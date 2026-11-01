@@ -51,7 +51,7 @@
 		"clsx": "^2.1.1",
 		"dompurify": "^3.3.0",
 		"highlight.js": "^11.11.0",
-		"katex": "^0.16.25",
+		"katex": "^0.19.1",
 		"lucide-react": "^1.0.0",
 		"marked": "^18.0.0",
 		"marked-footnote": "^1.4.0",
@@ -68,7 +68,7 @@
 		"@wxt-dev/module-react": "^1.2.0",
 		"sharp": "^0.35.5",
 		"tailwindcss": "^4.1.0",
-		"typescript": "~6.0.3",
+		"typescript": "~7.0.2",
 		"vite": "^8.0.0",
 		"web-ext": "^9.2.0",
 		"wxt": "^0.21.0"

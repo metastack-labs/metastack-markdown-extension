@@ -2,6 +2,10 @@
 @import "tailwindcss" source("../");
 @import "./markdown.css";
 @import "./code.css";
+@import "./components.css";
+
+/* Test files are left out of the sources zip too. */
+@source not "../**/*.test.ts";
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
