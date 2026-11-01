@@ -14,16 +14,37 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
 </p>
 
+![A Markdown document in Read view, with the folder tree on the left, front matter above the text and an On this page outline on the right.](assets/screenshots/reading-view.webp)
+
 ## Features
 
 - **Drag and drop** Markdown files or folders onto the workspace, or open them with the file and folder pickers.
 - **Open `.md` files from anywhere.** Drag one onto any tab or open it from your file manager, and it opens in the workspace instead of as plain text. Local folder listings (`file:///…/`) open there too.
 - **GitHub-style rendering:** tables, task lists, footnotes, alerts (`> [!NOTE]`), syntax highlighting, KaTeX math, Mermaid diagrams, front matter, heading anchors, and an "On this page" outline that follows your scroll. Relative images and links resolve against the document's folder.
+- **MDX components:** MetaStack's content components (`PromptBlock`, `Callout`, `GuideImage`, `ShotPlaceholder`, `Steps`, `Checklist`, `Kbd`, `PullQuote`) render the way they do in MetaStack, live as you type. Props are read as plain text and never run as code; anything else shows as written. In `.mdx` files, `{/* comments */}` and `import`/`export` lines are hidden.
 - **Lossless editing** in Read, Edit and Split (live preview) views. Files are saved exactly as written, line endings included; nothing is reformatted.
 - **Real saves** (Chrome and Edge): changes go straight back to the file on disk, with a warning if another app changed it first, and the view reloads when the file changes while you're reading.
 - **Folders that stick** (Chrome and Edge): opened folders are remembered across sessions, and `.gitignore`d and dependency folders are hidden from the tree.
 - **Manage documents:** create new ones in the current folder, tick tasks in the preview, copy or download Markdown, print.
 - Light and dark themes, adjustable text size, line spacing and page width, resizable panels and keyboard shortcuts.
+
+<details>
+<summary>Create a document</summary>
+
+Choose **New document**, name the file and select **Create document**. In Chrome and Edge, the file is created in the current folder; Firefox downloads a copy when you save.
+
+![New document dialog with a file name field and Create document button.](assets/screenshots/new-document.webp)
+
+</details>
+
+<details>
+<summary>Adjust the reading view</summary>
+
+Open **Settings** to choose a theme, page width, text size and line spacing. You can also control how local files open and look up keyboard shortcuts.
+
+![Settings showing theme, page width, text size, line spacing, local file preferences and keyboard shortcuts.](assets/screenshots/reading-settings.webp)
+
+</details>
 
 ## Install
 
@@ -38,11 +59,24 @@ The Chrome Web Store and Firefox Add-ons listings are on their way. Until then:
 
 Build it (see [Development](#development)), open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on…** and choose `.output/firefox-mv2/manifest.json`. Temporary add-ons are removed when Firefox quits.
 
-**Then**
+### Open your first document
 
 - Click the toolbar button, or press <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>M</kbd>, to open the workspace.
 - In Chrome and Edge, open the extension's **Details** and turn on **Allow access to file URLs** so `.md` files you open in the browser open in the workspace.
 - Try it with the sample documents in [`examples/`](examples): open that folder in the workspace.
+
+Choose **Open folder** or **Open file**, or drop files onto the workspace to start reading.
+
+![The welcome screen with Open folder, Open file and New document actions.](assets/screenshots/welcome-screen.webp)
+
+<details>
+<summary>Browse a folder</summary>
+
+Expand folders in the sidebar and select a document to open it. Use **New document** to start one in the current folder.
+
+![An open content folder with articles, guides and playbooks in the sidebar and a New document action in the workspace.](assets/screenshots/folder-browser.webp)
+
+</details>
 
 ### Saving, per browser
 
@@ -108,6 +142,7 @@ src/
 public/             icons and the extension's name and description
 scripts/            brand rendering, build and source verification
 assets/brand/       store images and their provenance
+assets/screenshots/ lossless WebP screenshots used in this README
 docs/               store listing copy and the publishing runbook
 examples/           sample documents
 ```
